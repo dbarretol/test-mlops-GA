@@ -1,0 +1,41 @@
+name: MLOps CI Pipeline
+
+# TODO: Define 'on' triggers for push and pull_request on 'main'
+on:
+  pull_request:
+    types: [opened,synchronize, reopened]
+
+jobs:
+  validate-and-report:
+    # TODO: Run on ubuntu-latest
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # TODO: Setup Python 3.10 with 'pip' caching
+    - name: Setup Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    # TODO: Install dependencies (requirements.txt, flake8, pytest)
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install flake8 pytest dvc
+    # TODO: Run flake8 on src/
+    - name: Run flake8
+      run: flake8 src/
+
+    # TODO: Run pytest on tests/
+    - name: Run pytest
+      run: pytest tests/
+
+    # TODO: Run dvc pull (or echo fallback)
+    - name: DVC pull
+      run: dvc pull
+
+    # TODO: Generate Markdown report using $GITHUB_STEP_SUMMARY
